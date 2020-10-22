@@ -16,8 +16,8 @@ var app = express()
 //})
 
 // view engine setup
-app.set("views", path.join(__dirname, "views"))
-app.set("view engine", "jade")
+// app.set("views", path.join(__dirname, "views"))
+// app.set("view engine", "jade")
 
 app.use(logger("dev"))
 app.use(express.json())
@@ -28,8 +28,6 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use("/", indexRouter)
 app.use("/users", usersRouter)
 
-const buildPath = path.join(__dirname, '..', 'build');
-app.use(express.static(buildPath));
 
 app.get('/jobs', async (req, res) => {
   try {
@@ -54,6 +52,8 @@ app.get('/jobs', async (req, res) => {
 app.use(function (req, res, next) {
   next(createError(404))
 })
+
+app.use(express.static(path.resolve(__dirname, './src')));
 
 app.get('*', function (request, response) {
   const filePath = path.resolve(__dirname, './src', 'index.html');
