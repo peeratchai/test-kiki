@@ -6,7 +6,8 @@
     "node": "12.6.0"
   },
   "scripts": {
-    "build": "npm install && react-scripts build",
+    "start-client": "react-scripts start",
+    "build": "react-scripts build",
     "start": "node ./bin/www"
   },
   "dependencies": {
