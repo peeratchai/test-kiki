@@ -28,6 +28,9 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use("/", indexRouter)
 app.use("/users", usersRouter)
 
+const buildPath = path.join(__dirname, '..', 'build');
+app.use(express.static(buildPath));
+
 app.get('/jobs', async (req, res) => {
   try {
     let { description = '', full_time, location = '', page = 1 } = req.query;
@@ -51,6 +54,11 @@ app.get('/jobs', async (req, res) => {
 app.use(function (req, res, next) {
   next(createError(404))
 })
+
+app.get('*', function (request, response) {
+  const filePath = path.resolve(__dirname, './src', 'index.html');
+  response.sendFile(filePath);
+});
 
 // error handler
 app.use(function (err, req, res, next) {
