@@ -1,33 +1,50 @@
-var createError = require("http-errors")
-var express = require("express")
-var path = require("path")
-var cookieParser = require("cookie-parser")
-var logger = require("morgan")
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 5000;
+const path = require('path');
+const fs = require('fs')
 
-var indexRouter = require("./routes/index")
-var usersRouter = require("./routes/users")
+app.get('/', function(request, response) {
+  console.log('Home page visited!');
+  const filePath = path.resolve(__dirname, './build', 'index.html');
+  fs.readFile(filePath, 'utf8', function (err,data) {
+    if (err) {
+      return console.log(err);
+    }
+    data = data.replace(/\$OG_TITLE/g, 'Home Page');
+    data = data.replace(/\$OG_DESCRIPTION/g, "Home page description");
+    result = data.replace(/\$OG_IMAGE/g, 'https://i.imgur.com/V7irMl8.png');
+    response.send(result);
+  });
+});
 
-var app = express()
+app.get('/about', function(request, response) {
+  console.log('About page visited!');
+  const filePath = path.resolve(__dirname, './build', 'index.html')
+  fs.readFile(filePath, 'utf8', function (err,data) {
+    if (err) {
+      return console.log(err);
+    }
+    data = data.replace(/\$OG_TITLE/g, 'About Page');
+    data = data.replace(/\$OG_DESCRIPTION/g, "About page description");
+    result = data.replace(/\$OG_IMAGE/g, 'https://i.imgur.com/V7irMl8.png');
+    response.send(result);
+  });
+});
 
-//app.use(express.static(path.join(__dirname, "build")))
-
-//app.get("/react", (req, res) => {
-//  res.sendFile(path.join(__dirname, "build", "index.html"))
-//})
-
-// view engine setup
-// app.set("views", path.join(__dirname, "views"))
-// app.set("view engine", "jade")
-
-app.use(logger("dev"))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
-app.use(cookieParser())
-app.use(express.static(path.join(__dirname, "public")))
-
-app.use("/", indexRouter)
-app.use("/users", usersRouter)
-
+app.get('/contact', function(request, response) {
+  console.log('Contact page visited!');
+  const filePath = path.resolve(__dirname, './build', 'index.html')
+  fs.readFile(filePath, 'utf8', function (err,data) {
+    if (err) {
+      return console.log(err);
+    }
+    data = data.replace(/\$OG_TITLE/g, 'Contact Page');
+    data = data.replace(/\$OG_DESCRIPTION/g, "Contact page description");
+    result = data.replace(/\$OG_IMAGE/g, 'https://i.imgur.com/V7irMl8.png');
+    response.send(result);
+  });
+});
 
 app.get('/jobs', async (req, res) => {
   try {
@@ -48,27 +65,12 @@ app.get('/jobs', async (req, res) => {
   }
 });
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404))
-})
 
-app.use(express.static(path.resolve(__dirname, './src')));
+app.use(express.static(path.resolve(__dirname, './build')));
 
-app.get('*', function (request, response) {
-  const filePath = path.resolve(__dirname, './src', 'index.html');
+app.get('*', function(request, response) {
+  const filePath = path.resolve(__dirname, './build', 'index.html');
   response.sendFile(filePath);
 });
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get("env") === "development" ? err : {}
-
-  // render the error page
-  res.status(err.status || 500)
-  res.render("error")
-})
-
-module.exports = app
+app.listen(port, () => console.log(`Listening on port ${port}`));
